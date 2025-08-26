@@ -44,6 +44,8 @@ from config import UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
+from api.uploads import uploads_bp
+app.register_blueprint(uploads_bp)
 
 from .views.user import user_views, login_viwes, permission_views, profile_views, refresh_toke_views
 

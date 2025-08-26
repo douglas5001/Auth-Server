@@ -53,11 +53,11 @@ def list_user_email(email):
 def update_user(user_db, new_user, image_file=None):
     user_db.name = new_user.name
     user_db.email = new_user.email
-    user_db.password = new_user.password
     user_db.profile_id = new_user.profile_id
     user_db.is_admin = new_user.is_admin
 
     if new_user.password:
+        user_db.password = new_user.password
         user_db.encrypt_password()
 
     if image_file:
