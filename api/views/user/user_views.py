@@ -184,6 +184,83 @@ class userDetail(Resource):
     return make_response(schema.jsonify(user))
   
   def put(self, id):
+    """
+    Atualizar os dados de um usuário existente pelo ID.  
+    Permite atualizar nome, e-mail, senha (opcional), perfil, se é administrador e imagem de perfil.
+
+    ⚠️ **Requer token JWT no header**  
+    Exemplo de header:
+    Authorization: Bearer **<seu_token_aqui>**
+
+    ---
+    tags:
+      - User
+    consumes:
+      - multipart/form-data
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: ID do usuário a ser atualizado
+      - in: formData
+        name: name
+        type: string
+        required: true
+        description: Nome atualizado do usuário
+      - in: formData
+        name: email
+        type: string
+        required: true
+        description: E-mail atualizado do usuário
+      - in: formData
+        name: password
+        type: string
+        required: false
+        description: Nova senha (opcional)
+      - in: formData
+        name: profile_id
+        type: integer
+        required: true
+        description: ID do perfil associado
+      - in: formData
+        name: is_admin
+        type: boolean
+        required: true
+        description: Define se o usuário é administrador
+      - in: formData
+        name: image
+        type: file
+        required: false
+        description: Nova imagem de perfil (opcional)
+    security:
+      - BearerAuth: []
+    responses:
+      200:
+        description: Usuário atualizado com sucesso
+        schema:
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            email:
+              type: string
+            profile_id:
+              type: integer
+            is_admin:
+              type: boolean
+            image:
+              type: string
+      400:
+        description: Dados inválidos ou e-mail já em uso
+      401:
+        description: Token ausente ou inválido
+      404:
+        description: Usuário ou perfil não encontrado
+      413:
+        description: Arquivo de imagem excede o limite permitido
+    """
     user_db = user_service.list_user_id(id)
     if user_db is None:
         return make_response(jsonify("Usuário não encontrado"), 404)
@@ -222,6 +299,32 @@ class userDetail(Resource):
     return make_response(schema.jsonify(updated_user), 200)
 
   def delete(self, id):
+    """
+    Excluir um usuário específico pelo ID.
+
+    ⚠️ **Requer token JWT no header**  
+    Exemplo de header:
+    Authorization: Bearer **<seu_token_aqui>**
+
+    ---
+    tags:
+      - User
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: ID do usuário a ser excluído
+    security:
+      - BearerAuth: []
+    responses:
+      204:
+        description: Usuário excluído com sucesso (sem conteúdo no corpo da resposta)
+      401:
+        description: Token ausente ou inválido
+      404:
+        description: Usuário não encontrado
+    """
     user = user_service.list_user_id(id)
     if user is None:
       return make_response(jsonify("Usuario não encontrado"), 404)
