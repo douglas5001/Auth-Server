@@ -118,6 +118,7 @@ class ProfileDetail(Resource):
     if profile is None:
       return make_response(jsonify("Profile não encontrado"), 404)
     profile_permission_service.delete_profile(profile)
+
     return make_response("Profile Excluido", 204)
   
   def put(self, id):

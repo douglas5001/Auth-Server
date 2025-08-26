@@ -65,3 +65,8 @@ def update_user(user_db, new_user, image_file=None):
 
     db.session.commit()
     return user_db
+
+def delete_user(user):
+    db.session.delete(user)
+    db.session.commit()
+    

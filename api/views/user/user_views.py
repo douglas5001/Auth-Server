@@ -221,6 +221,13 @@ class userDetail(Resource):
 
     return make_response(schema.jsonify(updated_user), 200)
 
+  def delete(self, id):
+    user = user_service.list_user_id(id)
+    if user is None:
+      return make_response(jsonify("Usuario não encontrado"), 404)
+    user_service.delete_user(user)
+    return make_response("Usuario Excluido", 204)
+    
 
 
 api.add_resource(userList, '/users')
