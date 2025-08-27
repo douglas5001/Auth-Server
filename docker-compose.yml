@@ -2,17 +2,30 @@ version: "3.9"
 
 services:
   web:
+    container_name: voyager-web
+    image: voyager-web:latest
     build: .
     ports:
-      - "8000:8000"
+      - "8001:8001"
     volumes:
       - .:/app
       - ./uploads:/app/uploads
     env_file:
       - .env
     networks:
-      - metanet1
+      - postgresdatabase_postgres_network
 
 networks:
-  postgres_network:
-    driver: bridge
+  postgresdatabase_postgres_network:
+    external: true
+
+
+
+  # cloudflared:
+  #   container_name: cloudflared
+  #   image: cloudflare/cloudflared:latest
+  #   command: tunnel --no-autoupdate run --token <SEU_TOKEN>
+  #   restart: always
+  #   networks:
+  #     - metanet1
+

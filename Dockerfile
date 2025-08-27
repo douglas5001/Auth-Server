@@ -23,4 +23,4 @@ RUN pip install -r requirements.txt
 RUN mkdir -p /app/uploads
 
 # Comando padrão
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "run:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8001", "--workers", "4", "--timeout", "120", "run:app"]
