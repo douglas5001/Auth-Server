@@ -44,7 +44,7 @@ swagger_template = {
     }
 }
 
-swagger = Swagger(app, template=swagger_template)
+# swagger = Swagger(app, template=swagger_template)
 
 
 from config import UPLOAD_FOLDER
