@@ -19,11 +19,13 @@ api = Api(app)
 jwt = JWTManager(app)
 
 
-CORS(app, origins=[
-    "http://localhost:3000",
-    "http://147.93.183.190:3000",
-    "https://hubble.muppet.com.br"
-], supports_credentials=True)
+# CORS(app, origins=[
+#     "http://localhost:3000",
+#     "http://147.93.183.190:3000",
+#     "https://hubble.muppet.com.br"
+# ], supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
 
 swagger_template = {
     "swagger": "2.0",

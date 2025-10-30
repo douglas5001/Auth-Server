@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teste Login com Google</title>
+
+  <!-- SDK oficial do Google Identity -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f4f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 8px;
+      width: 400px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      font-size: 14px;
+      white-space: pre-wrap;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h2>🔐 Teste Login com Google (Flask)</h2>
+
+  <!-- Botão renderizado automaticamente -->
+  <div id="googleBtn"></div>
+
+  <div id="result">Aguardando login...</div>
+
+  <script>
+    const API_URL = "http://localhost:8000/login/google"; // tua rota Flask
+    const CLIENT_ID = "1020602488853-u5ivmee510retjgfdnp48tnqkiuorcr2.apps.googleusercontent.com"; // troque pelo real
+
+    // Inicializa o login
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: CLIENT_ID,
+        callback: handleCredentialResponse
+      });
+
+      // Renderiza botão padrão do Google
+      google.accounts.id.renderButton(
+        document.getElementById("googleBtn"),
+        { theme: "outline", size: "large", width: 300 }
+      );
+
+      // Opcional: login automático se o usuário já estiver logado no Google
+      google.accounts.id.prompt();
+    };
+
+    async function handleCredentialResponse(response) {
+      const token = response.credential;
+      document.getElementById("result").innerText = "🔍 Enviando token para o backend...";
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+        const data = await res.json();
+
+        document.getElementById("result").innerText =
+          "✅ Resposta do backend:\n\n" + JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById("result").innerText = "❌ Erro:\n" + err;
+      }
+    }
+  </script>
+</body>
+</html>

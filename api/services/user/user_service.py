@@ -7,6 +7,20 @@ from werkzeug.exceptions import RequestEntityTooLarge
 from config import UPLOAD_FOLDER
 from flask import current_app
 
+def create_user_google(name, email, profile_id=None, is_admin=False, image_url=None):
+    from api.models.user.user_model import User
+    user = User(
+        name=name,
+        email=email,
+        password="google-auth",  # placeholder, não será usado
+        profile_id=profile_id,
+        is_admin=is_admin,
+        image=image_url
+    )
+    db.session.add(user)
+    db.session.commit()
+    return user
+
 def save_image_file(image_file):
     if not image_file:
         return None

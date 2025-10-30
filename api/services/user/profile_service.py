@@ -1,3 +1,4 @@
+from api.models.user.profile_permission_model import Profile
 from ...models.user import profile_permission_model
 from api import db
 
@@ -13,3 +14,16 @@ def create_profile(name: str, permission_ids: list[int] | None = None) -> profil
 def list_profile_id(profile_id: int) -> profile_permission_model.Profile:
     return profile_permission_model.Profile.query.get(profile_id)
 
+def list_profile_default():
+    """
+    Retorna o primeiro perfil cadastrado como padrão (ex: Usuário),
+    ou cria um novo se não existir nenhum perfil.
+    """
+    profile = Profile.query.filter_by(name="Usuário").first()
+
+    if not profile:
+        profile = Profile(name="Usuário")
+        db.session.add(profile)
+        db.session.commit()
+
+    return profile
