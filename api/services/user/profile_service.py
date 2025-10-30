@@ -19,10 +19,10 @@ def list_profile_default():
     Retorna o primeiro perfil cadastrado como padrão (ex: Usuário),
     ou cria um novo se não existir nenhum perfil.
     """
-    profile = Profile.query.filter_by(name="Usuário").first()
+    profile = Profile.query.filter_by(name="GUEST").first()
 
     if not profile:
-        profile = Profile(name="Usuário")
+        profile = Profile(name="GUEST")
         db.session.add(profile)
         db.session.commit()
 

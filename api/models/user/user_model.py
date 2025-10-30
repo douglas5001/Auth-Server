@@ -12,6 +12,7 @@ class User(db.Model):
     profile_id = db.Column(db.Integer, db.ForeignKey("profile.id"))
     profile = db.relationship("Profile")
     image = db.Column(db.String(255))
+    google_id = db.Column(db.String(255), unique=True, nullable=True)  # ✅ novo campo
 
     def encrypt_password(self):
         self.password = pbkdf2_sha256.hash(self.password)

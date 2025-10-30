@@ -7,12 +7,40 @@ from werkzeug.exceptions import RequestEntityTooLarge
 from config import UPLOAD_FOLDER
 from flask import current_app
 
-def create_user_google(name, email, profile_id=None, is_admin=False, image_url=None):
-    from api.models.user.user_model import User
-    user = User(
+def list_user_google_id(google_id):
+    return user_model.User.query.filter_by(google_id=google_id).first()
+
+
+def create_user(user, image_file=None):
+    image_name = save_image_file(image_file) if image_file else None
+    user_bd = user_model.User(
+        name=user.name,
+        email=user.email,
+        password=user.password,
+        profile_id=user.profile_id,
+        is_admin=user.is_admin,
+        image=image_name
+    )
+    user_bd.encrypt_password()
+    db.session.add(user_bd)
+    db.session.commit()
+    return user_bd
+
+def update_google_id_if_missing(usuario, google_id):
+    """Atualiza o google_id do usuário caso ainda não esteja definido."""
+    if not usuario.google_id:
+        usuario.google_id = google_id
+        db.session.commit()
+    return usuario
+
+
+# 🔹 Criação automática via Google Login
+def create_user_google(name, email, google_id, profile_id=None, is_admin=False, image_url=None):
+    user = user_model.User(
         name=name,
         email=email,
-        password="google-auth",  # placeholder, não será usado
+        password="google-auth",
+        google_id=google_id,
         profile_id=profile_id,
         is_admin=is_admin,
         image=image_url
